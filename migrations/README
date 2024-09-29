@@ -1,0 +1,4 @@
+run these commands step by step
+
+alembic revision --autogenerate
+alembic upgrade head

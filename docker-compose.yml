@@ -1,0 +1,38 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:15-alpine
+    restart: always
+    ports:
+      - "1234:5432"
+    env_file:
+      - .env
+    environment:
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+
+  project:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: project:latest
+    restart: always
+    volumes:
+      - .:/proj
+      - /proj/bin
+    command: /start-django
+    ports:
+      - "9000:8000"
+    depends_on:
+      - db
+    env_file:
+      - .env
+
+volumes:
+  pgdata:
+
+networks:
+  bridge:
+    external: true
